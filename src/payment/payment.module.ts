@@ -2,9 +2,12 @@ import { Module } from '@nestjs/common';
 import { PaymentController } from './payment.controller';
 import { PaymentService } from './payment.service';
 import { YooCheckout } from '@a2seven/yoo-checkout';
+import { PrismaModule } from 'src/prisma/prisma.module';
+import { PaymentWebhookController } from './payment.webhook.controller';
 
 @Module({
-  controllers: [PaymentController],
+  imports: [PrismaModule],
+  controllers: [PaymentController, PaymentWebhookController],
   providers: [
     PaymentService,
     {

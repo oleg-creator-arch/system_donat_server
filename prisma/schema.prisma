@@ -8,8 +8,30 @@ datasource db {
 
 model Expense {
   id        Int      @id @default(autoincrement())
-  title     String
-  amount    Float
-  category  String?
+  title     String   @unique
+  amount    Int
   createdAt DateTime @default(now())
+}
+
+enum PaymentMethod {
+  bank_card
+  sberbank
+  tinkoff_bank
+  sbp
+}
+
+enum PaymentStatus {
+  pending
+  succeeded
+  canceled
+  failed
+}
+
+model Payment {
+  id        Int           @id @default(autoincrement())
+  paymentId String        @unique
+  amount    Float
+  method    PaymentMethod
+  status    PaymentStatus
+  createdAt DateTime      @default(now())
 }
