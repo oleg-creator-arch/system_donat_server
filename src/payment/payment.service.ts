@@ -36,4 +36,20 @@ export class PaymentService {
       paymentUrl: payment.confirmation.confirmation_url,
     };
   }
+
+  async getStatistics() {
+    const totalCollected = await this.prisma.payment.aggregate({
+      _sum: { amount: true },
+      where: { status: 'succeeded' },
+    });
+
+    const totalExpenses = await this.prisma.expense.aggregate({
+      _sum: { amount: true },
+    });
+
+    return {
+      collected: totalCollected._sum.amount || 0,
+      expenses: totalExpenses._sum.amount || 0,
+    };
+  }
 }
