@@ -29,7 +29,7 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
 
   app.enableCors({
-    origin: process.env.CORS_ORIGIN,
+    origin: [process.env.CORS_ORIGIN,process.env.WWW_CORS_ORIGIN,],
     credentials: true,
   });
 
