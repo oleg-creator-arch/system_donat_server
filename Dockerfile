@@ -6,15 +6,29 @@ COPY package*.json ./
 RUN npm ci
 
 COPY . .
+
+RUN npx prisma generate
+
 RUN npm run build
 
 FROM node:20-alpine
+
 WORKDIR /app
 
+RUN npm install -g prisma
+
 COPY package*.json ./
+
 RUN npm ci --production
 
 COPY --from=build /app/dist ./dist
 
+COPY --from=build /app/prisma ./prisma
+
+COPY --from=build /app/prisma.config.ts ./prisma.config.ts
+
+COPY --from=build /app/node_modules ./node_modules
+
 EXPOSE 3000
-CMD ["node", "dist/main.js"]
+
+CMD sh -c "npx prisma migrate deploy --config ./prisma.config.ts && node dist/src/main.js"
